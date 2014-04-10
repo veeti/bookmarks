@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bookmarks</title>
+    <meta charset='utf-8' />
+
+    <link rel='stylesheet' href='/css/normalize.css' />
+    <link rel='stylesheet' href='/css/bookmarks.css' />
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body>
+    <div class='container'>
+      <div id='header'>
+        <div id='navigation'>
+          {% if not loggedIn %}
+          <a href='/login'>Log in or sign up</a>
+          {% else %}
+          <a href='/links/new'>+ Add</a>
+          <a href='/links'>Links</a>
+          <a href='#'>Settings</a>
+          <a href='/logout?token={{ csrfToken }}'>Log out</a>
+          {% endif %}
+        </div>
+
+        <a href='/' id='logo'>Bookmarks</a>
+      </div>
+
+      <div id='content'>
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+  </body>
+</html>

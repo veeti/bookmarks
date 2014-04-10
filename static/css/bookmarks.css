@@ -1,0 +1,169 @@
+@font-face {
+  font-family: 'ClearSansLight';
+  src: url('../fonts/ClearSans-Light-webfont.eot');
+  src: url('../fonts/ClearSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/ClearSans-Light-webfont.woff') format('woff'),
+       url('../fonts/ClearSans-Light-webfont.ttf') format('truetype'),
+       url('../fonts/ClearSans-Light-webfont.svg#clear_sans_lightregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ClearSansRegular';
+  src: url('../fonts/ClearSans-Regular-webfont.eot');
+  src: url('../fonts/ClearSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/ClearSans-Regular-webfont.woff') format('woff'),
+       url('../fonts/ClearSans-Regular-webfont.ttf') format('truetype'),
+       url('../fonts/ClearSans-Regular-webfont.svg#clear_sansregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: ClearSansLight, sans-serif;
+  font-size: 16px;
+  text-align: center;
+  color: #111;
+}
+
+div.container {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+/* Headers and links */
+#content a {
+  color: #34495e;
+  text-decoration: none;
+  border-bottom: 1px dotted #34495e;
+}
+
+#content a:hover {
+  color: #2c3e50;
+}
+
+h1, h2, h3, p {
+  margin: 1em 0;
+}
+
+/* Header */
+#header {
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0 10px;
+}
+
+#header a {
+  color: #555;
+}
+
+#header a:hover {
+  color: #111;
+}
+
+a#logo {
+  font-size: 24px;
+  text-decoration: none;
+}
+
+#navigation {
+  float: right;
+  font-size: 13px;
+}
+
+#navigation a {
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+/* Content */
+#content {
+  line-height: 1.5;
+  padding: 0 10px;
+  margin-top: 10px;
+}
+
+/* Bookmarks */
+div.bookmark {
+  margin: 10px 0;
+  opacity: 0.75;
+}
+
+div.bookmark:hover {
+  opacity: 1.0;
+}
+
+div.bookmark .title .main {
+  font-family: ClearSansRegular;
+  font-size: 24px;
+}
+
+div.bookmark .title .main a {
+  color: #111;
+  text-decoration: none;
+  border-bottom: 1px dotted #ccc;
+}
+
+div.bookmark .title .domain {
+  color: #555;
+  padding-left: 5px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+div.bookmark .title .domain:hover {
+  opacity: 1 !important;
+}
+
+/* Forms */
+form {
+  margin: 1em 0;
+}
+
+div.field {
+  margin: 1em 0;
+}
+
+div.field label {
+  display: block;
+  font-family: ClearSansRegular;
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+input[type=text],
+input[type=password],
+textarea {
+  background: #fff;
+  border: 1px solid #ccc;
+  font-size: 18px;
+  padding: 10px;
+}
+
+input[type=submit] {
+  display: block;
+  border: 0;
+  border-radius: 4px;
+  background: #e5e5e5;
+  padding: 5px 20px;
+
+  font-size: 18px;
+  color: #444;
+}
+
+input[type=submit]:hover {
+  background: #eee;
+}
+
+div.errors {
+  margin: 1em 0;
+  background-color: #e74c3c;
+  border-radius: 4px;
+  padding: 10px;
+  color: #fff;
+  width: 500px;
+}

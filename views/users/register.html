@@ -1,0 +1,32 @@
+{% import 'macros.html' as macros %}
+{% extends 'default.html' %}
+{% block content %}
+
+<form method='post'>
+  <div class='field'>
+    <label for='username'>Username</label>
+    <input type='text' id='username' name='username' value='{{ fields.username }}' />
+    {{ macros.field_error(errors.username) }}
+  </div>
+
+  <div class='field'>
+    <label for='password'>Password</label>
+    <input type='password' id='password' name='password' />
+    {{ macros.field_error(errors.password) }}
+  </div>
+
+  <div class='field'>
+    <label for='password_confirmation'>Password (again)</label>
+    <input type='password' id='password_confirmation' name='password_confirmation' />
+    {{ macros.field_error(errors.password_confirmation) }}
+  </div>
+
+  <div class='field'>
+    <input type='submit' value='Create account' />
+  </div>
+
+  {{ csrfField }}
+</form>
+
+<p><strong>By signing up, you agree to the <a href='/tos'>Terms of Service</a>.</strong></p>
+{% endblock %}

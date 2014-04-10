@@ -1,0 +1,27 @@
+{% extends 'default.html' %}
+{% block content %}
+{% if errors %}
+<div class="errors">{{ errors }}</div>
+{% endif %}
+
+<form method="post">
+  <div class="field">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" />
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" />
+  </div>
+
+  <div class="field">
+    <input type="submit" value="Log in" />
+  </div>
+
+  {{ csrfField }}
+  {{ req.session.loggedIn }}
+</form>
+
+<p><a href="/register">Don't have an account yet?</a></p>
+{% endblock %}

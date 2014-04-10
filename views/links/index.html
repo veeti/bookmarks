@@ -1,0 +1,17 @@
+{% extends 'default.html' %}
+{% block content %}
+{% for link in rows %}
+  <div class='bookmark'>
+    <div class='title'>
+      <span class='main'><a href='{{ link.url }}'>{{ link.title }}</a></span>
+      <span class='domain'>{{ link.domain }}</span>
+    </div>
+    {% if link.notes %}
+    <div class='notes'>
+      {{ link.notes }}
+    </div>
+    {% endif %}
+    {{ link.added }}
+  </div>
+{% endfor %}
+{% endblock %}

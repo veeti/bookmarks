@@ -1,0 +1,18 @@
+var config = {
+  // A list of secret keys used for session cookie signing. Keep confidential
+  // and safe or mean people can do *very* bad things.
+  session_secret_keys: [
+    // To generate a new key, run the following in a Node shell:
+    // require('crypto').randomBytes(32).toString('base64')
+    // And add it here.
+  ],
+
+  // The database connection URL. For example:
+  //
+  // postgres://user:password@host:port/database
+  // /var/run/postgresql.sock database
+  // socket:/var/run/postgresql.sock?db=database
+  database_url: "postgres://postgres:@localhost/bookmarks",
+}
+
+module.exports = config
