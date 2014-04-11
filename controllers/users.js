@@ -14,7 +14,7 @@ exports.postLogin = function(req, res, next) {
       req.session.loggedIn = true;
       return res.redirect('/links');
     } else {
-      return res.render('users/login.html', { 'errors': 'Invalid username or password.' });
+      return res.render('users/login.html', { 'errors': 'Invalid username or password.', 'username': username });
     }
   });
 };
