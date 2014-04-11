@@ -55,7 +55,7 @@ exports.validatePassword = function(hash, password, callback) {
  * Checks if a username is available for registration.
  */
 exports.isUsernameAvailable = function(client, username, callback) {
-  var query = squel.select().from('users').where('username = ?', username).toParam();
+  var query = squel.select().from('users').where('lower(username) = lower(?)', username).toParam();
   client.query(query.text, query.values, function(err, result) {
     if (err) { return callback(err); }
     callback(null, result.rows.length == 0);
@@ -66,7 +66,7 @@ exports.isUsernameAvailable = function(client, username, callback) {
  * Authenticates a specific username against a password.
  */
 exports.authenticateUser = function(client, username, password, callback) {
-  var query = squel.select().field('id').field('password_hash').from('users').where('username = ?', username).toParam();
+  var query = squel.select().field('id').field('password_hash').from('users').where('lower(username) = lower(?)', username).toParam();
   client.query(query.text, query.values, function(err, result) {
     if (err) { return callback(err); }
 
