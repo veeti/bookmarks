@@ -33,6 +33,7 @@ app.use(function(req, res, next) {
   var token = req.csrfToken;
   res.locals.csrfField = new nunjucks.runtime.SafeString("<input type='hidden' name='_csrf_token' value='" + token + "' />");
   res.locals.loggedIn = req.session.loggedIn || false;
+  res.locals.rootPath = config.root_path;
   req.user = req.session.loginId || -1;
   next();
 });

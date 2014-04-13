@@ -13,6 +13,9 @@ var config = {
   // /var/run/postgresql.sock database
   // socket:/var/run/postgresql.sock?db=database
   database_url: "postgres://postgres:@localhost/bookmarks",
+
+  // The root path to the application.
+  root_path: "http://localhost:3131/",
 }
 
 module.exports = config

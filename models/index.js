@@ -137,3 +137,11 @@ exports.createNewLink = function(client, user, title, url, note, callback) {
     callback(null, result.rows[0].id);
   });
 };
+
+exports.userHasLink = function(client, user, url, callback) {
+  var query = squel.select().from('links').field('id').where('url = ?', url).toParam();
+  client.query(query.text, query.values, function(err, result) {
+    if (err) { return callback(err); }
+    callback(null, result.rows.length > 0);
+  });
+};

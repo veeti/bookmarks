@@ -12,6 +12,9 @@ exports.route = function(app) {
   app.get('/links', authUser, getDatabase, links.links);
   app.get('/links/new', authUser, getDatabase, links.createLink);
   app.post('/links/new', authUser, getDatabase, links.createLink);
+  app.get('/bookmarklet/add', authUser, getDatabase, links.bookmarklet);
+  app.post('/bookmarklet/add', authUser, getDatabase, links.bookmarklet);
+  app.get('/bookmarklet', links.bookmarkletInfo);
 
   // Log in & sign up
   var users = require('./controllers/users');

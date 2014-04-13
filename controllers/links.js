@@ -13,39 +13,81 @@ exports.links = function(req, res, next) {
   });
 };
 
-exports.createLink = function(req, res, next) {
+/**
+ * Validation and save logic for link creation.
+ */
+function submitLink(req, cb) {
   var fields = {};
   var errors = {};
-  var fail = false;
-
-  function renderForm() {
-    return res.render('links/new.html', {'fields': fields, 'errors': errors});
-  }
 
   if (req.method == 'POST') {
     var fields = req.body;
 
-    if (fields.title == null || fields.title == '' || fields.title.length > 256) {
-      errors.title = 'Please enter a title.';
-      fail = true;
+    if (fields.title == null || fields.title.length > 256 || fields.title.length < 1) {
+      errors.title = 'A title is required.';
     }
 
-    var address = fields.url || '';
-    var parsed = url.parse(address);
-    if (parsed.protocol != 'https:' && parsed.protocol != 'http:') {
+    var parsedUrl = url.parse(fields.url || '');
+    if (parsedUrl.protocol != 'https:' && parsedUrl.protocol != 'http:') {
       errors.url = 'Invalid URL.';
-      fail = true;
     }
 
-    if (!fail) {
-      model.createNewLink(req.db, req.user, fields.title, fields.url, fields.note, function(err, id) {
-        if (err) { return next(err); }
-        return res.redirect('/links');
-      });
+    if (Object.keys(errors).length > 0) {
+      // Errors during validation
+      return cb(null, { status: false, errors: errors, fields: fields });
     } else {
-      return renderForm();
+      // Create the link
+      model.createNewLink(req.db, req.user, fields.title, fields.url, fields.note, function(err, id) {
+        if (err) { return cb(err); }
+        return cb(null, { status: true, id: id });
+      });
     }
   } else {
-    return renderForm();
+    // Show blank form populated with query params, if any
+    return cb(null, { status: false, fields: req.query });
   }
+}
+
+/**
+ * Shared logic for link creation pages.
+ */
+function createLink(req, res, next, template) {
+  var template = template || 'links/new.html';
+
+  submitLink(req, function(err, result) {
+    if (err) {
+      return next(err);
+    } else if (result.status) {
+      // Saved successfully
+      if (template == 'links/bookmarklet.html') {
+        return res.render('links/bookmarklet_saved.html');
+      } else {
+        return res.redirect('/links');
+      }
+    } else {
+      // Form has errors or GET
+      return res.render(template, { fields: result.fields, errors: result.errors });
+    }
+  });
+}
+
+exports.bookmarklet = function(req, res, next) {
+  var url = req.query.url || '';
+  model.userHasLink(req.db, req.user, url, function(err, duplicate) {
+    if (err) {
+      return next(err);
+    } else if (duplicate) {
+      return res.render('links/bookmarklet_duplicate.html');
+    } else {
+      return createLink(req, res, next, 'links/bookmarklet.html');
+    }
+  });
+}
+
+exports.bookmarkletInfo = function(req, res, next) {
+  return res.render('links/bookmarklet_info.html');
+}
+
+exports.createLink = function(req, res, next) {
+  return createLink(req, res, next, 'links/new.html');
 };

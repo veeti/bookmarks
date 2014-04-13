@@ -1,0 +1,10 @@
+{% extends 'default.html' %}
+{% block content %}
+<p>To easily add links to Bookmarks, you can install a "bookmarklet" in your browser's bookmarks toolbar.</p>
+
+<p>Pressing the bookmarklet will open a pop-up window for saving the current page you're in.</p>
+
+<p>Drag the following link to your bookmarks:</p>
+
+<p><a href="javascript:void(open('{{ rootPath }}bookmarklet/add?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title), 'Bookmarks', 'toolbar=no,width=700,height=400'));">Save page</a></p>
+{% endblock %}
