@@ -168,3 +168,8 @@ div.errors {
   color: #fff;
   width: 500px;
 }
+
+div.error {
+  margin-top: 3px;
+  color: red;
+}
