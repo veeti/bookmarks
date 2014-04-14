@@ -98,7 +98,6 @@ div.bookmark:hover {
 }
 
 div.bookmark .title .main {
-  font-family: ClearSansRegular;
   font-size: 24px;
 }
 
@@ -108,14 +107,16 @@ div.bookmark .title .main a {
   border-bottom: 1px dotted #ccc;
 }
 
-div.bookmark .title .domain {
+div.bookmark .domain,
+div.bookmark .timestamp,
+div.bookmark .separator {
   color: #555;
-  padding-left: 5px;
   font-size: 12px;
   opacity: 0.75;
 }
 
-div.bookmark .title .domain:hover {
+div.bookmark .domain:hover,
+div.bookmark .timestamp:hover {
   opacity: 1 !important;
 }
 

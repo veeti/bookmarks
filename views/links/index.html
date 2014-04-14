@@ -1,17 +1,21 @@
+{% import 'macros.html' as macro %}
 {% extends 'default.html' %}
 {% block content %}
 {% for link in rows %}
   <div class='bookmark'>
     <div class='title'>
       <span class='main'><a href='{{ link.url }}'>{{ link.title }}</a></span>
+    </div>
+    <div class='meta'>
       <span class='domain'>{{ link.domain }}</span>
+      <span class='separator'>-</span>
+      <span class='timestamp'>{{ macro.format_date(link.added) }}</span>
     </div>
     {% if link.notes %}
     <div class='notes'>
       {{ link.notes }}
     </div>
     {% endif %}
-    {{ link.added }}
   </div>
 {% endfor %}
 {% endblock %}
