@@ -1,6 +1,7 @@
 var async = require('async');
-var squel = require('squel');
-squel.useFlavour('postgres');
+var squel = require('squel').useFlavour('postgres');
+squel.cls.DefaultQueryBuilderOptions.tableAliasQuoteCharacter = '"';
+squel.cls.DefaultQueryBuilderOptions.nameQuoteCharacter = '"';
 var bcrypt = require('bcryptjs');
 
 /**
