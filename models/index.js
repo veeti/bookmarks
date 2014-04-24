@@ -3,6 +3,7 @@ var squel = require('squel').useFlavour('postgres');
 squel.cls.DefaultQueryBuilderOptions.tableAliasQuoteCharacter = '"';
 squel.cls.DefaultQueryBuilderOptions.nameQuoteCharacter = '"';
 var bcrypt = require('bcryptjs');
+var util = require('util');
 
 /**
  * A middleware that adds a database connection to the request.
@@ -182,7 +183,7 @@ exports.getTags = function(client, tags, callback) {
         var values = [], params = [], i = 1;
         create.forEach(function(tag) {
           console.log("creating " + tag);
-          values.push('($' + i + ')');
+          values.push(util.format('($%d)', i));
           params.push(tag);
           i++;
         });
@@ -232,7 +233,7 @@ exports.tagLink = function(client, link, tags, callback) {
         insert.forEach(function(id) {
           var linkParam = i;
           var tagParam = i + 1;
-          values.push('($' + linkParam + ', $' + tagParam + ')');
+          values.push(util.format('($%d, $%d)', linkParam, tagParam));
 
           params.push(link);
           params.push(id);
