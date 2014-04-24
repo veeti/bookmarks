@@ -14,6 +14,8 @@
       <span class='separator'>-</span>
       {% endif %}
       <span class='timestamp'>{{ macro.format_date(link.added) }}</span>
+      <span class='separator'>-</span>
+      <span class='actions'><a href='/links/{{ link.id }}'>Edit</a></span>
     </div>
     {% if link.notes %}
     <div class='notes'>
