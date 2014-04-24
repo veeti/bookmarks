@@ -109,6 +109,7 @@ div.bookmark .title .main a {
 
 div.bookmark .domain,
 div.bookmark .timestamp,
+div.bookmark .tags,
 div.bookmark .separator {
   color: #555;
   font-size: 12px;

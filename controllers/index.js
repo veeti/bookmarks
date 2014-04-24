@@ -4,3 +4,8 @@ exports.authUser = function(req, res, next) {
   }
   next();
 }
+
+exports.authLink = function(req, res, next) {
+  // FIXME
+  next();
+}

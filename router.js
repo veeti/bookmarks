@@ -1,5 +1,6 @@
 var getDatabase = require('./models').getDatabase;
 var authUser = require('./controllers').authUser;
+var authLink = require('./controllers').authLink;
 
 exports.route = function(app) {
   // Front page
@@ -10,10 +11,14 @@ exports.route = function(app) {
   // Links
   var links = require('./controllers/links');
   app.get('/links', authUser, getDatabase, links.links);
-  app.get('/links/new', authUser, getDatabase, links.createLink);
-  app.post('/links/new', authUser, getDatabase, links.createLink);
+
+  app.get('/links/new', authUser, getDatabase, links.newLink);
+  app.post('/links/new', authUser, getDatabase, links.newLink);
+  app.get('/links/:linkId', authUser, getDatabase, authLink, links.editLink);
+  app.post('/links/:linkId', authUser, getDatabase, authLink, links.editLink);
   app.get('/bookmarklet/add', authUser, getDatabase, links.bookmarklet);
   app.post('/bookmarklet/add', authUser, getDatabase, links.bookmarklet);
+
   app.get('/bookmarklet', links.bookmarkletInfo);
 
   // Log in & sign up
