@@ -160,7 +160,6 @@ exports.getLinkWithTags = function(client, id, callback) {
   var query = 'SELECT links.*, ARRAY_AGG(t.tag) AS tags FROM links LEFT JOIN taggings AS tt ON tt.link_id = links.id LEFT JOIN tags AS t ON t.id=tt.tag_id WHERE links.id=$1 GROUP BY links.id';
   client.query(query, [id], function(err, result) {
     if (err) { return callback(err); }
-    console.log(result.rows);
     callback(null, result.rows[0]);
   });
 };
@@ -180,7 +179,6 @@ exports.getTags = function(client, tags, callback) {
 
       // Existing tags
       query.rows.forEach(function(row) {
-        console.log("found " + row.tag);
         result[row.tag] = row.id;
         create.splice(create.indexOf(row.tag), 1);
       });
@@ -189,7 +187,6 @@ exports.getTags = function(client, tags, callback) {
       if (create.length > 0) {
         var values = [], params = [], i = 1;
         create.forEach(function(tag) {
-          console.log("creating " + tag);
           values.push(util.format('($%d)', i));
           params.push(tag);
           i++;
