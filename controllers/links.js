@@ -46,21 +46,6 @@ exports.bookmarklet = function(req, res, next) {
   });
 }
 
-/*
-exports.bookmarklet = function(req, res, next) {
-  var url = req.query.url || '';
-  model.userHasLink(req.db, req.user, url, function(err, duplicate) {
-    if (err) {
-      return next(err);
-    } else if (duplicate) {
-      return res.render('links/bookmarklet_duplicate.html');
-    } else {
-      return newLink(req, res, next, 'links/bookmarklet.html');
-    }
-  });
-}
-*/
-
 exports.bookmarkletInfo = function(req, res, next) {
   return res.render('links/bookmarklet_info.html');
 }
