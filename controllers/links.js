@@ -119,10 +119,9 @@ function validateLink(fields) {
 
   // Tags within bounds and sanitized
   fields.tags = (fields.tags || '');
-  var tags = fields.tags.split(',');
+  var tags = (fields.tags == '' ? [] : fields.tags.split(','));
   tags.forEach(function(tag) {
-    tag = tag.trim();
-    tags[tags.indexOf(tag)] = tag;
+    tags[tags.indexOf(tag)] = tag.trim();
 
     if (tag.length > 32) {
       errors.tags = 'The maximum length for a tag is 32 characters.';
