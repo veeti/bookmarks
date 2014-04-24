@@ -9,7 +9,12 @@
     <div class='meta'>
       <span class='domain'>{{ link.domain }}</span>
       <span class='separator'>-</span>
+      {% if link.tags.length > 0 and link.tags[0] != null %}
+      <span class='tags'>{{ link.tags.join(', ') }}</span>
+      <span class='separator'>-</span>
+      {% endif %}
       <span class='timestamp'>{{ macro.format_date(link.added) }}</span>
+      <span class='actions'><span class='separator'>-</span> <a href='/links/{{ link.id }}'>Edit</a></span>
     </div>
     {% if link.notes %}
     <div class='notes'>

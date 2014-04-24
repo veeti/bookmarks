@@ -13,6 +13,12 @@
   </div>
 
   <div class='field'>
+    <label for='tags'>Tags (separate with a comma)</label>
+    <input type='text' name='tags' id='tags' value='{{ fields.tags }}' />
+    {{ macros.field_error(errors.tags) }}
+  </div>
+
+  <div class='field'>
     <label for='notes'>Notes (optional)</label>
     <textarea id='notes' name='notes' rows='3' cols='20'></textarea>
   </div>

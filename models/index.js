@@ -3,6 +3,7 @@ var squel = require('squel').useFlavour('postgres');
 squel.cls.DefaultQueryBuilderOptions.tableAliasQuoteCharacter = '"';
 squel.cls.DefaultQueryBuilderOptions.nameQuoteCharacter = '"';
 var bcrypt = require('bcryptjs');
+var util = require('util');
 
 /**
  * A middleware that adds a database connection to the request.
@@ -104,17 +105,9 @@ exports.createNewUser = function(client, username, password, callback) {
  * Gets links for the specified user.
  */
 exports.getLinks = function(client, user, callback) {
-  var query = squel.select()
-    .field('id')
-    .field('title')
-    .field('url')
-    .field('note')
-    .field('added')
-    .from('links')
-    .where('user_id = ?', user)
-    .toParam();
+  var query = 'SELECT links.*, ARRAY_AGG(t.tag) AS tags FROM links LEFT JOIN taggings AS tt ON tt.link_id=links.id LEFT JOIN tags AS t ON t.id=tt.tag_id WHERE links.user_id = $1 GROUP BY links.id ORDER BY links.added DESC';
 
-  client.query(query.text, query.values, function(err, result) {
+  client.query(query, [user], function(err, result) {
     if (err) { return callback(err); }
     callback(null, result);
   });
@@ -139,10 +132,123 @@ exports.createNewLink = function(client, user, title, url, note, callback) {
   });
 };
 
+exports.userCanAccessLink = function(client, user, link, callback) {
+  client.query('SELECT id FROM links WHERE id=$1 AND user_id=$2', [link, user], function(err, result) {
+    if (err) { return callback(err); }
+    return callback(null, result.rows.length > 0);
+  });
+}
+
 exports.userHasLink = function(client, user, url, callback) {
   var query = squel.select().from('links').field('id').where('url = ?', url).toParam();
   client.query(query.text, query.values, function(err, result) {
     if (err) { return callback(err); }
     callback(null, result.rows.length > 0);
   });
+};
+
+exports.updateLink = function(client, id, title, url, note, callback) {
+  var query = 'UPDATE links SET title=$1, url=$2, note=$3 WHERE id=$4';
+  var params = [title, url, note, id];
+  client.query(query, params, function(err, result) {
+    if (err) { return callback(err); }
+    callback(null, id);
+  });
+};
+
+exports.getLinkWithTags = function(client, id, callback) {
+  var query = 'SELECT links.*, ARRAY_AGG(t.tag) AS tags FROM links LEFT JOIN taggings AS tt ON tt.link_id = links.id LEFT JOIN tags AS t ON t.id=tt.tag_id WHERE links.id=$1 GROUP BY links.id';
+  client.query(query, [id], function(err, result) {
+    if (err) { return callback(err); }
+    callback(null, result.rows[0]);
+  });
+};
+
+exports.getTags = function(client, tags, callback) {
+  var result = {};
+
+  async.waterfall([
+    // Find tags that already exist
+    function(cb) {
+      client.query('SELECT id, tag FROM tags WHERE tag=ANY($1)', [tags], cb);
+    },
+
+    // Save existing tags and figure out what to insert
+    function(query, cb) {
+      var create = tags;
+
+      // Existing tags
+      query.rows.forEach(function(row) {
+        result[row.tag] = row.id;
+        create.splice(create.indexOf(row.tag), 1);
+      });
+
+      // New tags
+      if (create.length > 0) {
+        var values = [], params = [], i = 1;
+        create.forEach(function(tag) {
+          values.push(util.format('($%d)', i));
+          params.push(tag);
+          i++;
+        });
+
+        client.query('INSERT INTO tags (tag) VALUES ' + values.join(', ') + ' RETURNING tag, id', params, cb);
+      } else {
+        cb(null, null);
+      }
+    },
+
+    // Save created tags
+    function(query, cb) {
+      if (query != null) {
+        query.rows.forEach(function(row) {
+          result[row.tag] = row.id;
+        });
+      }
+
+      cb(null, result);
+    }
+  ], callback);
+};
+
+exports.tagLink = function(client, link, tags, callback) {
+  async.waterfall([
+    // Delete outdated tags
+    function(cb) {
+      client.query('DELETE FROM taggings WHERE link_id = $1 AND tag_id != ANY($2)', [link, tags], cb);
+    },
+
+    // Find tags that already exist
+    function(query, cb) {
+      client.query('SELECT tag_id FROM taggings WHERE link_id = $1 AND tag_id = ANY($2)', [link, tags], cb);
+    },
+
+    // Filter results and find taggings to insert
+    function(query, cb) {
+      // Find the tags that aren't tagged yet
+      var insert = tags;
+      query.rows.forEach(function(row) {
+        insert.slice(insert.indexOf(row.tag_id), 1);
+      });
+
+      // Build the query
+      if (insert.length > 0) {
+        var values = [], params = [], i = 1;
+        insert.forEach(function(id) {
+          var linkParam = i;
+          var tagParam = i + 1;
+          values.push(util.format('($%d, $%d)', linkParam, tagParam));
+
+          params.push(link);
+          params.push(id);
+
+          i += 2;
+        });
+
+        client.query('INSERT INTO taggings (link_id, tag_id) VALUES ' + values.join(', '), params, cb);
+      } else {
+        cb();
+      }
+    }
+  ], callback);
 };

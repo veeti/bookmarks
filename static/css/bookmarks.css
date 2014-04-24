@@ -109,10 +109,20 @@ div.bookmark .title .main a {
 
 div.bookmark .domain,
 div.bookmark .timestamp,
+div.bookmark .tags,
+div.bookmark .actions,
 div.bookmark .separator {
   color: #555;
   font-size: 12px;
   opacity: 0.75;
+}
+
+div.bookmark .actions {
+  visibility: hidden;
+}
+
+div.bookmark:hover .actions {
+  visibility: visible !important;
 }
 
 div.bookmark .domain:hover,

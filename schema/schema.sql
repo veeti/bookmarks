@@ -13,5 +13,16 @@ CREATE TABLE links (
   added TIMESTAMP
 );
 
+CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  tag VARCHAR(64) UNIQUE
+);
+
+CREATE TABLE taggings (
+  id SERIAL PRIMARY KEY,
+  tag_id INTEGER REFERENCES tags(id) ON DELETE CASCADE,
+  link_id INTEGER REFERENCES links(id) ON DELETE CASCADE
+);
+
 CREATE INDEX links_user_id_idx ON links (user_id);
 CREATE INDEX links_url_idx ON links (url);
