@@ -132,6 +132,13 @@ exports.createNewLink = function(client, user, title, url, note, callback) {
   });
 };
 
+exports.userCanAccessLink = function(client, user, link, callback) {
+  client.query('SELECT id FROM links WHERE id=$1 AND user_id=$2', [link, user], function(err, result) {
+    if (err) { return callback(err); }
+    return callback(null, result.rows.length > 0);
+  });
+}
+
 exports.userHasLink = function(client, user, url, callback) {
   var query = squel.select().from('links').field('id').where('url = ?', url).toParam();
   client.query(query.text, query.values, function(err, result) {
