@@ -9,3 +9,7 @@
 {%- macro format_date(date) %}
 {{ date.getDate() }}.{{ date.getMonth() + 1 }}.{{ date.getFullYear() }}
 {% endmacro -%}
+
+{%- macro js(name) %}
+<script type='text/javascript' src='/js/{{ name }}.js'></script>
+{% endmacro -%}
