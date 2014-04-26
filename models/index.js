@@ -164,6 +164,10 @@ exports.getLinkWithTags = function(client, id, callback) {
   });
 };
 
+exports.deleteLink = function(client, id, callback) {
+  client.query('DELETE FROM links WHERE id=$1', [id], callback);
+};
+
 exports.getTags = function(client, tags, callback) {
   var result = {};
 

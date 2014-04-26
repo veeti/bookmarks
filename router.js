@@ -16,6 +16,8 @@ exports.route = function(app) {
   app.post('/links/new', authUser, getDatabase, links.newLink);
   app.get('/links/:linkId', authUser, getDatabase, authLink, links.editLink);
   app.post('/links/:linkId', authUser, getDatabase, authLink, links.editLink);
+  app.get('/links/:linkId/delete', authUser, getDatabase, authLink, links.deleteLink);
+  app.post('/links/:linkId/delete', authUser, getDatabase, authLink, links.deleteLink);
   app.get('/bookmarklet/add', authUser, getDatabase, links.bookmarklet);
   app.post('/bookmarklet/add', authUser, getDatabase, links.bookmarklet);
 

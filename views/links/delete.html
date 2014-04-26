@@ -1,0 +1,12 @@
+{% extends 'default.html' %}
+{% block content %}
+
+<h3>Confirm deletion</h3>
+
+<p>Are you sure you want to delete this link?</p>
+
+<form method='POST'>
+  {{ csrfField }}
+  <input type='submit' value='Delete link' />
+</form>
+{% endblock %}
