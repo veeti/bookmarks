@@ -126,7 +126,9 @@ div.bookmark:hover .actions {
 }
 
 div.bookmark .domain:hover,
-div.bookmark .timestamp:hover {
+div.bookmark .timestamp:hover,
+div.bookmark .tags:hover,
+div.bookmark .actions:hover {
   opacity: 1 !important;
 }
 
