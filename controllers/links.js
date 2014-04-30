@@ -25,7 +25,11 @@ exports.deleteLink = function(req, res, next) {
     var id = req.params.linkId || -1;
     model.deleteLink(req.db, id, function(err, result) {
       if (err) { return next(err); }
-      return res.redirect(ret);
+      if (req.xhr) {
+        return res.json({status: true});
+      } else {
+        return res.redirect(ret);
+      }
     });
   } else {
     return res.render('links/delete.html');

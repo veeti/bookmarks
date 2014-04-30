@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 {% for link in rows %}
-  <div class='bookmark'>
+  <div class='bookmark' data-id='{{ link.id }}'>
     <div class='title'>
       <span class='main'><a href='{{ link.url }}'>{{ link.title }}</a></span>
     </div>
@@ -17,7 +17,7 @@
       <span class='separator'>-</span>
       {% endif %}
       <span class='timestamp'>{{ macro.format_date(link.added) }}</span>
-      <span class='actions'><span class='separator'>-</span> <a href='/links/{{ link.id }}'>Edit</a> <span class='separator'>-</span> <a href='/links/{{ link.id }}/delete' class='action-delete'>Delete</a></span>
+      <span class='actions'><span class='separator'>-</span> <a href='/links/{{ link.id }}'>Edit</a> <span class='separator'>-</span> <a href='/links/{{ link.id }}/delete' class='action-delete' data-id='{{ link.id }}'>Delete</a></span>
     </div>
     {% if link.notes %}
     <div class='notes'>
