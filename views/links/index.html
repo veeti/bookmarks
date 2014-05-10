@@ -4,26 +4,40 @@
 {{ macro.js('links.index') }}
 {% endblock %}
 {% block content %}
-{% for link in rows %}
-  <div class='bookmark' data-id='{{ link.id }}'>
-    <div class='title'>
-      <span class='main'><a href='{{ link.url }}'>{{ link.title }}</a></span>
-    </div>
-    <div class='meta'>
-      <span class='domain'>{{ link.domain }}</span>
-      <span class='separator'>-</span>
-      {% if link.tags.length > 0 and link.tags[0] != null %}
-      <span class='tags'>{{ link.tags.join(', ') }}</span>
-      <span class='separator'>-</span>
+<div id='tags-list'>
+  <a href='/links' class='tag'>All</a>
+  {% for tag in userTags %}
+    {%
+    set current = tag.tag == currentTag
+    %}
+    <a href='/links/{{ tag.tag | urlencode }}' class='tag {{ 'current' if current else '' }}'>{{ tag.tag }}</a>
+  {% endfor %}
+</div>
+
+<div id='links-list'>
+  {% for link in rows %}
+    <div class='bookmark' data-id='{{ link.id }}'>
+      <div class='title'>
+        <span class='main'><a href='{{ link.url }}'>{{ link.title }}</a></span>
+      </div>
+      <div class='meta'>
+        <span class='domain'>{{ link.domain }}</span>
+        <span class='separator'>-</span>
+        {% if link.tags.length > 0 and link.tags[0] != null %}
+        <span class='tags'>{{ link.tags.join(', ') }}</span>
+        <span class='separator'>-</span>
+        {% endif %}
+        <span class='timestamp'>{{ macro.format_date(link.added) }}</span>
+        <span class='actions'><span class='separator'>-</span> <a href='/links/{{ link.id }}'>Edit</a> <span class='separator'>-</span> <a href='/links/{{ link.id }}/delete' class='action-delete' data-id='{{ link.id }}'>Delete</a></span>
+      </div>
+      {% if link.notes %}
+      <div class='notes'>
+        {{ link.notes }}
+      </div>
       {% endif %}
-      <span class='timestamp'>{{ macro.format_date(link.added) }}</span>
-      <span class='actions'><span class='separator'>-</span> <a href='/links/{{ link.id }}'>Edit</a> <span class='separator'>-</span> <a href='/links/{{ link.id }}/delete' class='action-delete' data-id='{{ link.id }}'>Delete</a></span>
     </div>
-    {% if link.notes %}
-    <div class='notes'>
-      {{ link.notes }}
-    </div>
-    {% endif %}
-  </div>
-{% endfor %}
+  {% endfor %}
+</div>
+
+<div class='clear'></div>
 {% endblock %}

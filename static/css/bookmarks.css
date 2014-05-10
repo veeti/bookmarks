@@ -34,6 +34,10 @@ div.container {
   text-align: left;
 }
 
+div.clear {
+  clear: both;
+}
+
 /* Headers and links */
 #content a {
   color: #34495e;
@@ -88,6 +92,27 @@ a#logo {
 }
 
 /* Bookmarks */
+div#links-list {
+  width: 800px;
+}
+
+div#tags-list {
+  float: right;
+  width: 150px;
+}
+
+div#tags-list .tag {
+  display: block;
+  text-align: right;
+  border-bottom: none;
+  margin-bottom: 5px;
+}
+
+div#tags-list .tag.current,
+div#tags-list .tag:hover {
+  font-weight: bold;
+}
+
 div.bookmark {
   margin: 10px 0;
   opacity: 0.75;

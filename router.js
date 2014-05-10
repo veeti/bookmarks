@@ -11,6 +11,7 @@ exports.route = function(app) {
   // Links
   var links = require('./controllers/links');
   app.get('/links', authUser, getDatabase, links.links);
+  app.get('/links/:tag', authUser, getDatabase, links.links);
 
   app.get('/links/new', authUser, getDatabase, links.newLink);
   app.post('/links/new', authUser, getDatabase, links.newLink);

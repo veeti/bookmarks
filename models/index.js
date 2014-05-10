@@ -101,17 +101,29 @@ exports.createNewUser = function(client, username, password, callback) {
   });
 };
 
+// FIXME: ugly
+var LINK_TAG_QUERY = 'SELECT links.*, ARRAY_AGG(t.tag) AS tags FROM links LEFT JOIN taggings AS tt ON tt.link_id = links.id LEFT JOIN tags AS t ON t.id = tt.tag_id %s GROUP BY links.id %s';
+var LINK_USER_QUERY = util.format(LINK_TAG_QUERY, 'WHERE links.user_id = $1', 'ORDER BY links.added DESC');
+var LINK_USER_AND_TAG_QUERY = util.format(LINK_TAG_QUERY, 'WHERE links.user_id = $1', 'HAVING $2 = ANY(ARRAY_AGG(t.tag)) ORDER BY links.added DESC');
+
 /**
  * Gets links for the specified user.
  */
 exports.getLinks = function(client, user, callback) {
-  var query = 'SELECT links.*, ARRAY_AGG(t.tag) AS tags FROM links LEFT JOIN taggings AS tt ON tt.link_id=links.id LEFT JOIN tags AS t ON t.id=tt.tag_id WHERE links.user_id = $1 GROUP BY links.id ORDER BY links.added DESC';
-
-  client.query(query, [user], function(err, result) {
-    if (err) { return callback(err); }
-    callback(null, result);
-  });
+  client.query(LINK_USER_QUERY, [user], callback);
 };
+
+/**
+ * Gets links for the specified user with the specified tag.
+ */
+exports.getLinksWithTag = function(client, user, tag, callback) {
+  client.query(LINK_USER_AND_TAG_QUERY, [user, tag], callback);
+}
+
+exports.getUserTags = function(client, user, callback) {
+  var query = 'SELECT DISTINCT LOWER(tags.tag), tags.tag FROM tags INNER JOIN taggings ON taggings.tag_id = tags.id INNER JOIN links ON taggings.link_id = links.id WHERE links.user_id = $1 ORDER BY LOWER(tags.tag) ASC';
+  client.query(query, [user], callback);
+}
 
 /**
  * Creates a new link in the database.

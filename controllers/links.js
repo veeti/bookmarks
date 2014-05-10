@@ -5,14 +5,29 @@ var model = require('../models/');
 /** Link viewing. **/
 
 exports.links = function(req, res, next) {
-  model.getLinks(req.db, req.user, function(err, result) {
+  // Get the wanted links
+  function getLinks(callback) {
+    if (req.params.tag) {
+      model.getLinksWithTag(req.db, req.user, req.params.tag, callback);
+    } else {
+      model.getLinks(req.db, req.user, callback);
+    }
+  }
+
+  // Get the user's tags
+  function getUserTags(callback) {
+    model.getUserTags(req.db, req.user, callback);
+  }
+
+  async.parallel([getLinks, getUserTags], function(err, results) {
     if (err) { return next(err); }
 
-    for (var i = 0; i < result.rows.length; i++) {
-      result.rows[i].domain = url.parse(result.rows[i].url).host;
+    var links = results[0], userTags = results[1];
+    for (var i = 0; i < links.rows.length; i++) {
+      links.rows[i].domain = url.parse(links.rows[i].url).host;
     }
 
-    return res.render('links/index.html', {'rows': result.rows});
+    return res.render('links/index.html', { rows: links.rows, userTags: userTags.rows, currentTag: req.params.tag });
   });
 };
 
