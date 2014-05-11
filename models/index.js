@@ -1,7 +1,4 @@
 var async = require('async');
-var squel = require('squel').useFlavour('postgres');
-squel.cls.DefaultQueryBuilderOptions.tableAliasQuoteCharacter = '"';
-squel.cls.DefaultQueryBuilderOptions.nameQuoteCharacter = '"';
 var bcrypt = require('bcryptjs');
 var util = require('util');
 
@@ -57,8 +54,8 @@ exports.validatePassword = function(hash, password, callback) {
  * Checks if a username is available for registration.
  */
 exports.isUsernameAvailable = function(client, username, callback) {
-  var query = squel.select().from('users').where('lower(username) = lower(?)', username).toParam();
-  client.query(query.text, query.values, function(err, result) {
+  var query = 'SELECT id FROM users WHERE lower(username) = lower($1)';
+  client.query(query, [username], function(err, result) {
     if (err) { return callback(err); }
     callback(null, result.rows.length == 0);
   });
@@ -68,9 +65,10 @@ exports.isUsernameAvailable = function(client, username, callback) {
  * Authenticates a specific username against a password.
  */
 exports.authenticateUser = function(client, username, password, callback) {
-  var query = squel.select().field('id').field('password_hash').from('users').where('lower(username) = lower(?)', username).toParam();
-  client.query(query.text, query.values, function(err, result) {
+  var query = 'SELECT id, password_hash FROM users WHERE LOWER(username) = LOWER($1)';
+  client.query(query, [username], function(err, result) {
     if (err) { return callback(err); }
+    console.log(result);
 
     if (result.rows.length > 0) {
       exports.validatePassword(result.rows[0].password_hash, password, function(err, valid) {
@@ -88,13 +86,10 @@ exports.authenticateUser = function(client, username, password, callback) {
  */
 exports.createNewUser = function(client, username, password, callback) {
   exports.hashPassword(password, function(err, hash) {
-    var query = squel.insert().into('users')
-      .set('username', username)
-      .set('password_hash', hash)
-      .returning('id')
-      .toParam();
+    var query = 'INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING id';
+    var params = [username, hash];
 
-    client.query(query.text, query.values, function(err, result) {
+    client.query(query, params, function(err, result) {
       if (err) { return callback(err); }
       callback(null, result.rows[0].id);
     });
@@ -129,16 +124,10 @@ exports.getUserTags = function(client, user, callback) {
  * Creates a new link in the database.
  */
 exports.createNewLink = function(client, user, title, url, note, callback) {
-  var query = squel.insert().into('links')
-    .set('user_id', user)
-    .set('title', title)
-    .set('url', url)
-    .set('note', note)
-    .set('added', new Date().toISOString())
-    .returning('id')
-    .toParam();
+  var query = 'INSERT INTO links (user_id, title, url, note, added) VALUES ($1, $2, $3, $4, $5) RETURNING id';
+  var params = [user, title, url, note, new Date().toISOString()];
 
-  client.query(query.text, query.values, function(err, result) {
+  client.query(query, params, function(err, result) {
     if (err) { return callback(err); }
     callback(null, result.rows[0].id);
   });
@@ -152,8 +141,9 @@ exports.userCanAccessLink = function(client, user, link, callback) {
 }
 
 exports.userHasLink = function(client, user, url, callback) {
-  var query = squel.select().from('links').field('id').where('url = ?', url).toParam();
-  client.query(query.text, query.values, function(err, result) {
+  var query = 'SELECT id FROM links WHERE url = $1 AND user_id = $2';
+  var params = [url, user];
+  client.query(query, params, function(err, result) {
     if (err) { return callback(err); }
     callback(null, result.rows.length > 0);
   });
