@@ -10,7 +10,7 @@
     {%
     set current = tag.tag == currentTag
     %}
-    <a href='/links/{{ tag.tag | urlencode }}' class='tag {{ 'current' if current else '' }}'>{{ tag.tag }}</a>
+    <a href='/links/tag/{{ tag.tag | urlencode }}' class='tag {{ 'current' if current else '' }}'>{{ tag.tag }}</a>
   {% endfor %}
 </div>
 
