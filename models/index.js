@@ -68,7 +68,6 @@ exports.authenticateUser = function(client, username, password, callback) {
   var query = 'SELECT id, password_hash FROM users WHERE LOWER(username) = LOWER($1)';
   client.query(query, [username], function(err, result) {
     if (err) { return callback(err); }
-    console.log(result);
 
     if (result.rows.length > 0) {
       exports.validatePassword(result.rows[0].password_hash, password, function(err, valid) {
