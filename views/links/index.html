@@ -27,7 +27,11 @@
         <span class='separator'>-</span>
 
         {% if link.tags.length > 0 and link.tags[0] != null %}
-          <span class='tags'>{{ link.tags.join(', ') }}</span>
+          <span class='tags'>
+            {% for tag in link.tags %}
+            <span class='tag'><a href='/links/tag/{{ tag | urlencode }}'>{{ tag }}</a></span>
+            {% endfor %}
+          </span>
           <span class='separator'>-</span>
         {% endif %}
 
