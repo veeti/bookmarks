@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "express": "^4.0.0-rc3",
+    "express": "^4.4.3",
     "body-parser": "^1.0.0",
     "cookie-session": "^1.0.1",
     "simple-csrf": "^1.0.1",
