@@ -1,6 +1,9 @@
 var getDatabase = require('./models').getDatabase;
-var authUser = require('./controllers').authUser;
-var authLink = require('./controllers').authLink;
+
+// Import middle processing functions
+var middleware = require('./controllers');
+var authUser = middleware.authUser;
+var authLink = middleware.authLink;
 
 exports.route = function(app) {
   // Front page
