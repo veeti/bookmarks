@@ -5,7 +5,10 @@
 {% endblock %}
 {% block content %}
 <div id='tags-list'>
-  <a href='/links' class='tag'>All</a>
+  {% if currentTag %}
+  <a href='/links' class='tag all'>Clear filter</a>
+  {% endif %}
+
   {% for tag in userTags %}
     {%
     set current = tag.tag == currentTag

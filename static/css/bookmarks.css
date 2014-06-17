@@ -102,10 +102,14 @@ div#tags-list {
 }
 
 div#tags-list .tag {
-  display: block;
-  text-align: right;
+  display: inline-block;
+  padding: 2px;
   border-bottom: none;
-  margin-bottom: 5px;
+}
+
+div#tags-list .all {
+  display: block;
+  margin-bottom: 10px;
 }
 
 div#tags-list .tag.current,
