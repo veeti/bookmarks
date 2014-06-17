@@ -28,7 +28,7 @@
           {% endif %}
         </div>
 
-        <a href='/' id='logo'>Bookmarks</a>
+        <a href='{{ "/" if not loggedIn else "/links" }}' id='logo'>Bookmarks</a>
       </div>
 
       <div id='content'>
