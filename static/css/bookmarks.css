@@ -112,8 +112,7 @@ div#tags-list .all {
   margin-bottom: 10px;
 }
 
-div#tags-list .tag.current,
-div#tags-list .tag:hover {
+div#tags-list .tag.current {
   font-weight: bold;
 }
 
