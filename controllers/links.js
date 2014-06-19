@@ -23,10 +23,6 @@ exports.links = function(req, res, next) {
     if (err) { return next(err); }
 
     var links = results[0], userTags = results[1];
-    for (var i = 0; i < links.rows.length; i++) {
-      links.rows[i].domain = url.parse(links.rows[i].url).host;
-    }
-
     return res.render('links/index.html', { rows: links.rows, userTags: userTags.rows, currentTag: req.params.tag });
   });
 };

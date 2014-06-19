@@ -1,6 +1,7 @@
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var util = require('util');
+var url = require('url');
 
 /**
  * A middleware that adds a database connection to the request.
@@ -122,9 +123,11 @@ exports.getUserTags = function(client, user, callback) {
 /**
  * Creates a new link in the database.
  */
-exports.createNewLink = function(client, user, title, url, note, callback) {
-  var query = 'INSERT INTO links (user_id, title, url, note, added) VALUES ($1, $2, $3, $4, $5) RETURNING id';
-  var params = [user, title, url, note, new Date().toISOString()];
+exports.createNewLink = function(client, user, title, link, note, callback) {
+  var domain = url.parse(link).host;
+
+  var query = 'INSERT INTO links (user_id, title, url, domain, note, added) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id';
+  var params = [user, title, link, domain, note, new Date().toISOString()];
 
   client.query(query, params, function(err, result) {
     if (err) { return callback(err); }
@@ -148,9 +151,12 @@ exports.userHasLink = function(client, user, url, callback) {
   });
 };
 
-exports.updateLink = function(client, id, title, url, note, callback) {
-  var query = 'UPDATE links SET title=$1, url=$2, note=$3 WHERE id=$4';
-  var params = [title, url, note, id];
+exports.updateLink = function(client, id, title, link, note, callback) {
+  var domain = url.parse(link).host;
+
+  var query = 'UPDATE links SET title=$1, url=$2, domain=$3, note=$4 WHERE id=$5';
+  var params = [title, url, domain, note, id];
+
   client.query(query, params, function(err, result) {
     if (err) { return callback(err); }
     callback(null, id);
