@@ -17,6 +17,7 @@ exports.route = function(app) {
   // Link browsing
   app.get('/links', authUser, getDatabase, links.links);
   app.get('/links/tag/:tag', authUser, getDatabase, links.links);
+  app.get('/links/domain/:domain', authUser, getDatabase, links.links);
 
   // Link submission and modification
   app.get('/links/new', authUser, getDatabase, links.newLink);

@@ -9,6 +9,8 @@ exports.links = function(req, res, next) {
   function getLinks(callback) {
     if (req.params.tag) {
       model.getLinksWithTag(req.db, req.user, req.params.tag, callback);
+    } else if (req.params.domain) {
+      model.getLinksWithDomain(req.db, req.user, req.params.domain, callback);
     } else {
       model.getLinks(req.db, req.user, callback);
     }

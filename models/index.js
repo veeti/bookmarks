@@ -97,6 +97,7 @@ exports.createNewUser = function(client, username, password, callback) {
 };
 
 // FIXME: ugly
+var LINK_DOMAIN_QUERY = 'SELECT * FROM links WHERE lower(domain) = lower($1) AND user_id = $2 ORDER BY added DESC';
 var LINK_TAG_QUERY = 'SELECT links.*, ARRAY_AGG(t.tag) AS tags FROM links LEFT JOIN taggings AS tt ON tt.link_id = links.id LEFT JOIN tags AS t ON t.id = tt.tag_id %s GROUP BY links.id %s';
 var LINK_USER_QUERY = util.format(LINK_TAG_QUERY, 'WHERE links.user_id = $1', 'ORDER BY links.added DESC');
 var LINK_USER_AND_TAG_QUERY = util.format(LINK_TAG_QUERY, 'WHERE links.user_id = $1', 'HAVING $2 = ANY(ARRAY_AGG(t.tag)) ORDER BY links.added DESC');
@@ -113,6 +114,13 @@ exports.getLinks = function(client, user, callback) {
  */
 exports.getLinksWithTag = function(client, user, tag, callback) {
   client.query(LINK_USER_AND_TAG_QUERY, [user, tag], callback);
+}
+
+/**
+ * Gets links for the specified user with the specified domain.
+ */
+exports.getLinksWithDomain = function(client, user, domain, callback) {
+  client.query(LINK_DOMAIN_QUERY, [domain, user], callback);
 }
 
 exports.getUserTags = function(client, user, callback) {
